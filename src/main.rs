@@ -3,7 +3,15 @@
 
 use esp_backtrace as _;
 use esp_println::println;
-use hal::{clock::ClockControl, peripherals::Peripherals, prelude::*, timer::TimerGroup, Rtc};
+use hal::{
+    clock::ClockControl, i2c, peripherals::Peripherals, prelude::*, timer::TimerGroup, Delay, Rtc,
+    IO,
+};
+use mpu6050::*;
+
+// Compile, flash and run:
+// source ~/export-esp.sh
+// cargo espflash --release --monitor
 
 #[entry]
 fn main() -> ! {

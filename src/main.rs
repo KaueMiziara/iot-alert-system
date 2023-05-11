@@ -82,6 +82,44 @@ fn main() -> ! {
             reset_reference = false;
             delay.delay_ms(100u8);
         } else {
+            // Update values
+            let acc = mpu.get_acc();
+            let gyro = mpu.get_gyro();
+            let temp = mpu.get_temp();
+            // All of those "get" methods return a Result<T,E>.
+            // "acc" and "gyro"'s 'T' is equivalent to an array of 3 f32, [x, y, z];
+            // "temp"'s T is an f32
+
+            // Accelerometer data
+            match acc {
+                Ok(data) => {
+                    println!("Accelerometer:");
+                    println!("Ax: {} m/s^2", data[0]);
+                    println!("Ay: {} m/s^2", data[1]);
+                    println!("Az: {} m/s^2", data[2]);
+                }
+                Err(_) => panic!("Error reading data from the accelerometer"),
+            };
+
+            // Gyroscope data
+            match gyro {
+                Ok(data) => {
+                    println!("Gyroscope:");
+                    println!("Gx: {} rad/s", data[0]);
+                    println!("Gy: {} rad/s", data[1]);
+                    println!("Gz: {} rad/s", data[2]);
+                }
+                Err(_) => panic!("Error reading data from the gyroscope"),
+            };
+
+            // Temperature data
+            match temp {
+                Ok(data) => {
+                    println!("Temperature:\n{} ºC", data);
+                }
+                Err(_) => panic!("Error reading data from the temperature sensor"),
+            }
+
             println!("---");
 
             reset_reference = true;

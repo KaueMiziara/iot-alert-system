@@ -65,5 +65,27 @@ fn main() -> ! {
     mpu.init(&mut delay)
         .expect("Error while initializing MPU6050");
 
-    loop {}
+    // Define reference values
+    let mut acc_ref = mpu.get_acc();
+    let temp_ref = mpu.get_temp();
+
+    // Only sudden moves should activate the buzzer.
+    // For that, each loop cycle should reset the accelerometer's reference.
+    // Otherwise, changing the MPU's position would also sound the alarm.
+    let mut reset_reference = true;
+
+    println!("---");
+    loop {
+        if reset_reference {
+            acc_ref = mpu.get_acc();
+
+            reset_reference = false;
+            delay.delay_ms(100u8);
+        } else {
+            println!("---");
+
+            reset_reference = true;
+            delay.delay_ms(500u16);
+        }
+    }
 }

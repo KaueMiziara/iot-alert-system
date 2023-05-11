@@ -13,6 +13,14 @@ use mpu6050::*;
 // source ~/export-esp.sh
 // cargo espflash --release --monitor
 
+enum Limit {
+    Mechanical,
+    Temperature,
+}
+
+const MECHANICAL_LIMIT: f32 = 0.8;
+const TEMPERATURE_LIMIT: f32 = 2.5;
+
 #[entry]
 fn main() -> ! {
     let peripherals = Peripherals::take();
@@ -97,6 +105,17 @@ fn main() -> ! {
                     println!("Ax: {} m/s^2", data[0]);
                     println!("Ay: {} m/s^2", data[1]);
                     println!("Az: {} m/s^2", data[2]);
+
+                    let acc_ref_x = acc_ref.as_ref().unwrap()[0];
+
+                    let mut delta = data[0] - acc_ref_x;
+
+                    if delta.abs() >= MECHANICAL_LIMIT {
+                        println!("MECHANICAL STRESS DETECTED!");
+                        println!("Current: {}", data[0]);
+                        println!("Reference: {}", acc_ref_x);
+                        println!("Delta: {}", delta);
+                    }
                 }
                 Err(_) => panic!("Error reading data from the accelerometer"),
             };
@@ -116,6 +135,16 @@ fn main() -> ! {
             match temp {
                 Ok(data) => {
                     println!("Temperature:\n{} ºC", data);
+
+                    let temp_ref = temp_ref.as_ref().unwrap();
+                    let mut delta = data - temp_ref;
+
+                    if delta.abs() >= TEMPERATURE_LIMIT {
+                        println!("OVERHEATING DETECTED");
+                        println!("Current: {}", data);
+                        println!("Reference: {}", temp_ref);
+                        println!("Delta: {}", delta);
+                    }
                 }
                 Err(_) => panic!("Error reading data from the temperature sensor"),
             }
@@ -130,13 +159,15 @@ fn main() -> ! {
 
 // abs() method for f32 is not defined outside std
 pub trait Absolute {
-    fn abs(&mut self);
+    fn abs(&mut self) -> Self;
 }
 
 impl Absolute for f32 {
-    fn abs(&mut self) {
+    fn abs(&mut self) -> Self {
         if self.is_sign_negative() {
             *self *= -1.0;
         }
+
+        *self
     }
 }

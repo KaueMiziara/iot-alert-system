@@ -127,3 +127,16 @@ fn main() -> ! {
         }
     }
 }
+
+// abs() method for f32 is not defined outside std
+pub trait Absolute {
+    fn abs(&mut self);
+}
+
+impl Absolute for f32 {
+    fn abs(&mut self) {
+        if self.is_sign_negative() {
+            *self *= -1.0;
+        }
+    }
+}

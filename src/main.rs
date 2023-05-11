@@ -115,6 +115,13 @@ fn main() -> ! {
                         println!("Current: {}", data[0]);
                         println!("Reference: {}", acc_ref_x);
                         println!("Delta: {}", delta);
+
+                        alarm(
+                            &mut buzzer,
+                            &mut internal_led,
+                            &Limit::Mechanical,
+                            &mut delay,
+                        );
                     }
                 }
                 Err(_) => panic!("Error reading data from the accelerometer"),
@@ -144,6 +151,13 @@ fn main() -> ! {
                         println!("Current: {}", data);
                         println!("Reference: {}", temp_ref);
                         println!("Delta: {}", delta);
+
+                        alarm(
+                            &mut buzzer,
+                            &mut internal_led,
+                            &Limit::Temperature,
+                            &mut delay,
+                        );
                     }
                 }
                 Err(_) => panic!("Error reading data from the temperature sensor"),
@@ -157,6 +171,52 @@ fn main() -> ! {
     }
 }
 
+// Functions to make the alarm sound
+fn alarm(
+    buzzer: &mut hal::gpio::GpioPin<
+        hal::gpio::Output<hal::gpio::PushPull>,
+        hal::gpio::Bank1GpioRegisterAccess,
+        hal::gpio::DualCoreInteruptStatusRegisterAccessBank1,
+        hal::gpio::InputOutputAnalogPinType,
+        hal::gpio::Gpio33Signals,
+        33,
+    >,
+    led: &mut hal::gpio::GpioPin<
+        hal::gpio::Output<hal::gpio::PushPull>,
+        hal::gpio::Bank0GpioRegisterAccess,
+        hal::gpio::DualCoreInteruptStatusRegisterAccessBank0,
+        hal::gpio::InputOutputAnalogPinType,
+        hal::gpio::Gpio2Signals,
+        2,
+    >,
+    limit: &Limit,
+    delay: &mut Delay,
+) {
+    let buzzes: u8 = match limit {
+        Limit::Mechanical => 3,
+        Limit::Temperature => 9,
+    };
+
+    for _ in 0..buzzes {
+        buzzer.set_high().unwrap();
+        led.set_high().unwrap();
+
+        alarm_time(limit, delay);
+
+        buzzer.set_low().unwrap();
+        led.set_low().unwrap();
+
+        alarm_time(limit, delay);
+    }
+}
+
+fn alarm_time(limit: &Limit, delay: &mut Delay) {
+    match limit {
+        Limit::Mechanical => delay.delay_ms(100u8),
+        Limit::Temperature => delay.delay_ms(50u8),
+    }
+}
+
 // abs() method for f32 is not defined outside std
 pub trait Absolute {
     fn abs(&mut self) -> Self;
@@ -167,7 +227,6 @@ impl Absolute for f32 {
         if self.is_sign_negative() {
             *self *= -1.0;
         }
-
         *self
     }
 }

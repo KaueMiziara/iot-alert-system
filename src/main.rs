@@ -9,10 +9,6 @@ use hal::{
 };
 use mpu6050::*;
 
-// Compile, flash and run:
-// source ~/export-esp.sh
-// cargo espflash --release --monitor
-
 enum Limit {
     Mechanical,
     Temperature,
@@ -27,7 +23,6 @@ fn main() -> ! {
     let mut system = peripherals.DPORT.split();
     let clocks = ClockControl::boot_defaults(system.clock_control).freeze();
 
-    // Disable the RTC and TIMG watchdog timers
     let mut rtc = Rtc::new(peripherals.RTC_CNTL);
     let timer_group0 = TimerGroup::new(
         peripherals.TIMG0,
@@ -45,10 +40,8 @@ fn main() -> ! {
     wdt0.disable();
     wdt1.disable();
 
-    // Initialize Delay
     let mut delay = Delay::new(&clocks);
 
-    // Initialize IO && Pin definitions
     let io = IO::new(peripherals.GPIO, peripherals.IO_MUX);
     let (mut internal_led, mut buzzer, sda, scl) = (
         io.pins.gpio2.into_push_pull_output(),
@@ -57,7 +50,6 @@ fn main() -> ! {
         io.pins.gpio22,
     );
 
-    // Configure I2C
     let i2c = i2c::I2C::new(
         peripherals.I2C0,
         sda,
@@ -68,18 +60,13 @@ fn main() -> ! {
     );
     delay.delay_ms(255u8);
 
-    // Initialize MPU6050 module
     let mut mpu = Mpu6050::new(i2c);
     mpu.init(&mut delay)
         .expect("Error while initializing MPU6050");
 
-    // Define reference values
     let mut acc_ref = mpu.get_acc();
     let temp_ref = mpu.get_temp();
 
-    // Only sudden moves should activate the buzzer.
-    // For that, each loop cycle should reset the accelerometer's reference.
-    // Otherwise, changing the MPU's position would also sound the alarm.
     let mut reset_reference = true;
 
     println!("---");
@@ -90,15 +77,10 @@ fn main() -> ! {
             reset_reference = false;
             delay.delay_ms(100u8);
         } else {
-            // Update values
             let acc = mpu.get_acc();
             let gyro = mpu.get_gyro();
             let temp = mpu.get_temp();
-            // All of those "get" methods return a Result<T,E>.
-            // "acc" and "gyro"'s 'T' is equivalent to an array of 3 f32, [x, y, z];
-            // "temp"'s T is an f32
 
-            // Accelerometer data
             match acc {
                 Ok(data) => {
                     println!("Accelerometer:");
@@ -127,7 +109,6 @@ fn main() -> ! {
                 Err(_) => panic!("Error reading data from the accelerometer"),
             };
 
-            // Gyroscope data
             match gyro {
                 Ok(data) => {
                     println!("Gyroscope:");
@@ -138,7 +119,6 @@ fn main() -> ! {
                 Err(_) => panic!("Error reading data from the gyroscope"),
             };
 
-            // Temperature data
             match temp {
                 Ok(data) => {
                     println!("Temperature:\n{} ºC", data);
@@ -171,7 +151,6 @@ fn main() -> ! {
     }
 }
 
-// Functions to make the alarm sound
 fn alarm(
     buzzer: &mut hal::gpio::GpioPin<
         hal::gpio::Output<hal::gpio::PushPull>,
@@ -217,7 +196,6 @@ fn alarm_time(limit: &Limit, delay: &mut Delay) {
     }
 }
 
-// abs() method for f32 is not defined outside std
 pub trait Absolute {
     fn abs(&mut self) -> Self;
 }

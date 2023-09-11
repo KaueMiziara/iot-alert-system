@@ -9,6 +9,7 @@ use hal::{
 };
 use mpu6050::*;
 
+use rs_esp32_simple_preventive_maintenance_example::absolute::Absolute;
 use rs_esp32_simple_preventive_maintenance_example::limit::Limit;
 
 const MECHANICAL_LIMIT: f32 = 0.8;
@@ -190,18 +191,5 @@ fn alarm_time(limit: &Limit, delay: &mut Delay) {
     match limit {
         Limit::Mechanical => delay.delay_ms(100u8),
         Limit::Temperature => delay.delay_ms(50u8),
-    }
-}
-
-pub trait Absolute {
-    fn abs(&mut self) -> Self;
-}
-
-impl Absolute for f32 {
-    fn abs(&mut self) -> Self {
-        if self.is_sign_negative() {
-            *self *= -1.0;
-        }
-        *self
     }
 }

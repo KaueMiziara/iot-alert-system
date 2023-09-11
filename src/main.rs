@@ -9,10 +9,7 @@ use hal::{
 };
 use mpu6050::*;
 
-enum Limit {
-    Mechanical,
-    Temperature,
-}
+use rs_esp32_simple_preventive_maintenance_example::limit::Limit;
 
 const MECHANICAL_LIMIT: f32 = 0.8;
 const TEMPERATURE_LIMIT: f32 = 2.5;

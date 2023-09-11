@@ -55,10 +55,12 @@ Feel free to adapt the code and hardware connections to meet the requirements of
 
 ## Diagram (made using Fritzing)
 Below are the schematic diagram illustrating the hardware connections:
+
 ![PreventiveMaintenanceSketch_schem](https://github.com/KaueMiziara/rs-esp32-simple-preventive-maintenance-example/assets/119542829/4bbb3d78-836c-4b30-9927-61ade57e1f59)
 
 ## Serial monitor output example
 For reference, here's an example of the output you can expect to see in the serial monitor when running this project:
+
 ![ESP32-preventive-maintenance-serialmonitor](https://github.com/KaueMiziara/rs-esp32-simple-preventive-maintenance-example/assets/119542829/af8d09ee-ff44-432c-b906-2138424c6258)
 
 ## Credits

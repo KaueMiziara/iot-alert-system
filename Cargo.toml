@@ -1,5 +1,5 @@
 [package]
-name = "rs_esp32_simple_preventive_maintenance_example"
+name = "iot_alert_system"
 version = "1.0.0"
 authors = ["Kauê Miziara <kauemiziara@gmail.com>"]
 edition = "2021"

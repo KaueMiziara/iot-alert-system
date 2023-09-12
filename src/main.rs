@@ -9,9 +9,9 @@ use hal::{
 };
 use mpu6050::*;
 
-use rs_esp32_simple_preventive_maintenance_example::absolute::Absolute;
-use rs_esp32_simple_preventive_maintenance_example::alarm::alarm;
-use rs_esp32_simple_preventive_maintenance_example::limit::Limit;
+use iot_alert_system::absolute::Absolute;
+use iot_alert_system::alarm::alarm;
+use iot_alert_system::limit::Limit;
 
 const MECHANICAL_LIMIT: f32 = 0.8;
 const TEMPERATURE_LIMIT: f32 = 2.5;

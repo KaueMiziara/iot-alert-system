@@ -272,6 +272,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "iot_alert_system"
+version = "1.0.0"
+dependencies = [
+ "esp-backtrace",
+ "esp-println",
+ "esp32-hal",
+ "mpu6050",
+]
+
+[[package]]
 name = "libm"
 version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -473,16 +483,6 @@ name = "regex-syntax"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a5996294f19bd3aae0453a862ad728f60e6600695733dd5df01da90c54363a3c"
-
-[[package]]
-name = "rs_esp32_simple_preventive_maintenance_example"
-version = "1.0.0"
-dependencies = [
- "esp-backtrace",
- "esp-println",
- "esp32-hal",
- "mpu6050",
-]
 
 [[package]]
 name = "rustversion"

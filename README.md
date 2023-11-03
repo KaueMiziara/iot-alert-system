@@ -2,7 +2,7 @@
 ---
 
 ## About the Project
-This project utilizes an ESP32 microcontroller to monitor data from an accelerometer and a temperature sensor.
+This project uses an ESP32 microcontroller to monitor data from an accelerometer and a temperature sensor.
 The main goal is to sound an alarm if the readings exceed predefined limits, indicating potential issues with the monitored equipment.
 
 A similar concept could be applied to monitor machines, alerting the staff in case of overheating or mechanical stresses, indicating possible malfunctions before
@@ -10,9 +10,9 @@ the equipment becomes inoperable.
 
 The two limits that trigger alarms are:
 
-- **Mechanical Stress Limit**: If the mechanical stress on the equipment exceeds a certain threshold (defined as MECHANICAL_LIMIT), an alarm is triggered. This could be useful to detect excessive vibrations or impacts.
+- **Mechanical Stress Limit**: If the mechanical stress on the equipment exceeds a certain threshold (defined as **```MECHANICAL_LIMIT```**), an alarm is triggered. This could be useful to detect excessive vibrations or impacts.
 
-- **Temperature Limit**: If the temperature reading goes beyond a specified limit (defined as TEMPERATURE_LIMIT), an alarm is sounded. This helps identify overheating issues.
+- **Temperature Limit**: If the temperature reading goes beyond a specified limit (defined as **```TEMPERATURE_LIMIT```**), an alarm is sounded. This helps identify overheating issues.
 
 ## How to Use
 To replicate this project or adapt it for your specific use case, follow these steps:
@@ -24,7 +24,7 @@ Make sure all connections are secure.
 ### Software Setup
 Make sure to have Rust and Cargo [installed](https://www.rust-lang.org/tools/install).
 
-Follow the steps in [The Rust on ESP3 Book](https://esp-rs.github.io/book/) to setup the toolchain.
+Follow the steps in [The Rust on ESP32 Book](https://esp-rs.github.io/book/) to setup the toolchain.
 
 ### Compile and Flash
 Once you have the environment set up, clone this repository and try to build it.
@@ -37,7 +37,7 @@ cargo build
 
 - Note that the first build will take some time.
 
-If it builds sucessfully, you may flash it into you ESP32.
+If it builds successfully, you may flash it into your ESP32.
 The following example flashes the code in a board connected to [PORT] and opens the serial monitor to check for alerts and sensor readings:
 
 ```bash
@@ -47,11 +47,11 @@ cargo espflash flash -p [PORT] --monitor
 ## Customization
 You can customize this project to suit your needs by adjusting the following parameters in the code:
 
-- **MECHANICAL_LIMIT**: Change this value to set the threshold for detecting mechanical stress.
+- **MECHANICAL_LIMIT**: Adjust this value to set the mechanical stress threshold.
 - **TEMPERATURE_LIMIT**: Modify this value to set the temperature limit for triggering alarms.
-- **GPIO**: Adapt the pins and IO modes to your use case.
+- **GPIO**: Customize the pin configurations and I/O modes to match your use case..
 
-Feel free to adapt the code and hardware connections to meet the requirements of your specific application.
+Feel free to adapt the code and hardware connections to meet the specific requirements of your application.
 
 ## Diagram (made using Fritzing)
 Below are the schematic diagram illustrating the hardware connections:
